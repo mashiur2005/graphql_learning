@@ -71,6 +71,11 @@ java {
     }
 }
 
+// Always execute tests, never restore results from the build cache.
+tasks.withType(Test).configureEach {
+    outputs.cacheIf { false }
+}
+
 application {
     // Define the main class for the application.
     mainClass = 'com.example.GraphQLServer'
