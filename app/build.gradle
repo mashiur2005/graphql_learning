@@ -75,3 +75,19 @@ application {
     // Define the main class for the application.
     mainClass = 'com.example.GraphQLServer'
 }
+
+def scalaSourceDirs = sourceSets.collect { it.scala.srcDirs }.flatten()
+
+tasks.register('scalafmtCheck', Exec) {
+    group = 'formatting'
+    description = 'Check that all Scala sources are formatted with scalafmt.'
+    workingDir = rootProject.projectDir
+    commandLine = ['scalafmt', '--test'] + scalaSourceDirs.collect { it.absolutePath }
+}
+
+tasks.register('scalafmtApply', Exec) {
+    group = 'formatting'
+    description = 'Format all Scala sources with scalafmt.'
+    workingDir = rootProject.projectDir
+    commandLine = ['scalafmt'] + scalaSourceDirs.collect { it.absolutePath }
+}

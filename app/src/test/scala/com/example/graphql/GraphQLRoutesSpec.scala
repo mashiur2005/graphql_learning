@@ -144,7 +144,9 @@ class GraphQLRoutesSpec extends AnyFunSuite with ScalatestRouteTest {
 
   test("updateGame changes only the provided fields") {
     val r = freshRoute
-    graphqlRequest("""mutation { updateGame(id: 1, title: "Zelda: BOTW Remastered") { id title platform } }""") ~> r ~> check {
+    graphqlRequest(
+      """mutation { updateGame(id: 1, title: "Zelda: BOTW Remastered") { id title platform } }"""
+    ) ~> r ~> check {
       assert(status === StatusCodes.OK)
       val json = parser.parse(responseAs[String]).getOrElse(fail("response was not valid JSON"))
       val updated = json.hcursor.downField("data").downField("updateGame")
@@ -185,7 +187,9 @@ class GraphQLRoutesSpec extends AnyFunSuite with ScalatestRouteTest {
 
   test("createAuthor adds a new author with an auto-generated id") {
     val r = freshRoute
-    graphqlRequest("""mutation { createAuthor(name: "Dana Lee", verified: true) { id name verified } }""") ~> r ~> check {
+    graphqlRequest(
+      """mutation { createAuthor(name: "Dana Lee", verified: true) { id name verified } }"""
+    ) ~> r ~> check {
       assert(status === StatusCodes.OK)
       val json = parser.parse(responseAs[String]).getOrElse(fail("response was not valid JSON"))
       val created = json.hcursor.downField("data").downField("createAuthor")

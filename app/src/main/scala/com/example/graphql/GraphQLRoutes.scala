@@ -46,7 +46,7 @@ object GraphQLRoutes {
                     )
                     .recover {
                       case error: QueryAnalysisError => error.resolveError.asInstanceOf[Json]
-                      case error: ErrorWithResolver => error.resolveError.asInstanceOf[Json]
+                      case error: ErrorWithResolver  => error.resolveError.asInstanceOf[Json]
                     }
 
                   onComplete(result) {

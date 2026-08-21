@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+# pre-push hook: auto-formats Scala sources with scalafmt before pushing.
+#
+# Git fixes the commit(s) to be pushed BEFORE this hook runs, so a hook can't
+# silently fold new changes into the push already in flight. If scalafmt finds
+# anything to reformat, this hook commits the fix and aborts the push — run
+# `git push` again and it will go through immediately (nothing left to format).
+set -euo pipefail
+
+repo_root="$(git rev-parse --show-toplevel)"
+cd "$repo_root"
+
+if ! command -v scalafmt >/dev/null 2>&1; then
+  echo "pre-push: 'scalafmt' CLI not found on PATH (install via 'cs install scalafmt'). Skipping format check." >&2
+  exit 0
+fi
+
+./gradlew -q scalafmtApply
+
+if git diff --quiet; then
+  exit 0
+fi
+
+echo "pre-push: scalafmt reformatted the following files:" >&2
+git diff --name-only >&2
+
+git add -u
+git commit -m "Apply scalafmt formatting" --no-verify >/dev/null
+
+echo "" >&2
+echo "pre-push: created a formatting commit. Push aborted — run 'git push' again." >&2
+exit 1
