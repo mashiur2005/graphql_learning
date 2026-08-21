@@ -145,7 +145,6 @@ app/src/main/scala/com/example/
     └── Review.scala
 
 app/src/test/scala/com/example/
-├── AppSuite.scala
 └── graphql/GraphQLRoutesSpec.scala   # route-level tests for every query/mutation
 ```
 
