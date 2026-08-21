@@ -11,6 +11,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ./gradlew test --tests "com.example.graphql.GraphQLRoutesSpec"         # run a single test class
 ./gradlew test --tests "*GraphQLRoutesSpec*createGame*"                # run a single test case by name pattern
 ./gradlew compileScala                                                 # fast compile-only check
+./gradlew scalafmtCheck                                                # fail if any Scala source is unformatted
+./gradlew scalafmtApply                                                # reformat all Scala sources with scalafmt
 ./curl-commands.sh                                                     # exercise every query/mutation/error case against a running server
 ```
 
@@ -35,3 +37,5 @@ Key design points a future change needs to respect:
 - **Sangria errors are caught and turned into GraphQL error payloads, not HTTP error codes.** `QueryAnalysisError`/`ErrorWithResolver` are recovered into a Circe `Json` error body with HTTP 200; only a JSON-parse failure or a GraphQL syntax error (`SyntaxError` from `QueryParser.parse`) produces an HTTP 400.
 - **`app/src/main/scala/com/example/App.scala`** is the original Gradle-init-generated "Hello, world!" sample and is unused by the running application (`application.mainClass` in `app/build.gradle` points to `com.example.GraphQLServer`). Its test (`AppSuite.scala`) has been removed; the file itself is untested but harmless dead code.
 - Tests that assert exact counts against the shared sample data (e.g. "3 games") use the class-level `context`/`route` in `GraphQLRoutesSpec`; mutation tests must use `freshRoute` (a new `GraphQLContext()` per call) to avoid mutating shared state and breaking those count assertions.
+- **`scalafmtCheck`/`scalafmtApply` (in `app/build.gradle`) shell out to the `scalafmt` CLI directly** rather than using a Gradle scalafmt plugin — the obvious plugin (`cz.alenkacz.gradle.scalafmt`) uses APIs removed in Gradle 9 and fails to apply. Requires `scalafmt` on `PATH`.
+- **`.githooks/pre-push` auto-formats before every push** (enabled per-clone via `git config core.hooksPath .githooks`, not a Claude Code hook). Because git fixes the commit(s) to push before invoking the hook, a reformat can't be folded into the push already in flight — the hook commits the fix and aborts (exit 1) instead; the next `git push` then succeeds immediately since nothing is left to format. Don't try to make it "succeed on the first push" — that's not achievable with a pre-push hook.

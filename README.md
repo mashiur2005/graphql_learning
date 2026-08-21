@@ -157,3 +157,24 @@ notes a future change should respect.
 push if source files changed since README.md was last updated and README.md
 isn't part of the current push. If you hit that, update this README (or ask
 Claude to run the `update-readme` skill) and push again.
+
+### Code formatting
+
+Scala sources are formatted with [scalafmt](https://scalameta.org/scalafmt/)
+(config in `.scalafmt.conf`). Requires the `scalafmt` CLI on your `PATH`
+(`cs install scalafmt` via [Coursier](https://get-coursier.io/)).
+
+```bash
+./gradlew scalafmtCheck   # fails if anything is unformatted
+./gradlew scalafmtApply   # reformats in place
+```
+
+A `pre-push` git hook auto-formats before every push. Since git fixes the
+commit(s) to be pushed before the hook runs, a reformat can't be folded into
+that same push — if scalafmt finds anything to fix, the hook commits the fix
+and aborts; just run `git push` again and it will go through. Enable it once
+per clone:
+
+```bash
+git config core.hooksPath .githooks
+```
