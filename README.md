@@ -148,3 +148,13 @@ app/src/test/scala/com/example/
 ├── AppSuite.scala
 └── graphql/GraphQLRoutesSpec.scala   # route-level tests for every query/mutation
 ```
+
+## Contributing
+
+See [`CLAUDE.md`](CLAUDE.md) for build/test commands and the architecture
+notes a future change should respect.
+
+`git push` in this repo is gated by a `.claude/hooks` check that blocks the
+push if source files changed since README.md was last updated and README.md
+isn't part of the current push. If you hit that, update this README (or ask
+Claude to run the `update-readme` skill) and push again.
