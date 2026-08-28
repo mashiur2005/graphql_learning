@@ -135,9 +135,9 @@ requests covering every query, mutation, and error case:
 
 ## Product search (Elasticsearch)
 
-The `product_search` module indexes garment products (men's/women's/unisex)
-into Elasticsearch and searches them with a `multi_match` query over
-`name`/`description`/`category`/`brand`.
+The `product_search` module is a second GraphQL server exposing garment
+products (men's/women's/unisex) backed by Elasticsearch instead of an
+in-memory store.
 
 Start a local single-node Elasticsearch cluster:
 
@@ -145,11 +145,24 @@ Start a local single-node Elasticsearch cluster:
 docker compose up -d      # Elasticsearch 9.5.2 on http://localhost:9200, security disabled (dev only)
 ```
 
-Then index the sample products and run a search (the first CLI arg is the
-search text, defaulting to `"dress"`):
+Then run the server — on startup it creates the `products` index (if
+missing) and indexes the sample products:
 
 ```bash
-./gradlew :product_search:run --args="jeans"
+./gradlew :product_search:run
+```
+
+This starts a GraphQL server at `http://localhost:8081/graphql` with:
+
+- `products` — list every product
+- `product(id: Int!)` — look up a single product by id (`null` if not found)
+- `searchProducts(query: String!)` — full-text `multi_match` search over
+  `name`/`description`/`category`/`brand`
+
+```bash
+curl -s -X POST http://localhost:8081/graphql \
+  -H 'Content-Type: application/json' \
+  -d '{"query":"{ searchProducts(query: \"jeans\") { id name category gender price } }"}'
 ```
 
 `ELASTICSEARCH_HOST` / `ELASTICSEARCH_PORT` env vars override the default
@@ -175,12 +188,16 @@ app/src/test/scala/com/example/
 └── graphql/GraphQLRoutesSpec.scala   # route-level tests for every query/mutation
 
 product_search/src/main/scala/com/example/productsearch/
-├── ProductSearchServer.scala         # indexes sample data, runs a demo search
+├── ProductSearchServer.scala         # binds the Pekko HTTP server on :8081
 ├── data/SampleData.scala             # seed data for garment products
+├── graphql/
+│   ├── ProductSearchContext.scala    # wraps the ElasticsearchClient, the Sangria userContext
+│   ├── ProductSchemaDefinition.scala # Sangria schema: products/product/searchProducts
+│   └── ProductSearchRoutes.scala     # HTTP route: parses requests, executes queries
 ├── model/Product.scala
 └── search/
     ├── ElasticsearchClientFactory.scala   # builds the ElasticsearchClient
-    └── ProductSearchIndex.scala           # index creation, bulk indexing, search
+    └── ProductSearchIndex.scala           # index creation, bulk indexing, search queries
 ```
 
 ## Contributing

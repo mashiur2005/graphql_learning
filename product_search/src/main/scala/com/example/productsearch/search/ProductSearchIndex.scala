@@ -1,6 +1,7 @@
 package com.example.productsearch.search
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient
+import co.elastic.clients.elasticsearch.core.SearchResponse
 import co.elastic.clients.elasticsearch.core.bulk.IndexOperation
 import co.elastic.clients.elasticsearch.indices.ExistsRequest
 import com.example.productsearch.model.Product
@@ -56,6 +57,19 @@ object ProductSearchIndex {
           .query(q => q.multiMatch(m => m.query(queryText).fields("name", "description", "category", "brand"))),
       classOf[Product]
     )
-    response.hits().hits().asScala.flatMap(hit => Option(hit.source())).toSeq
+    hitsAsProducts(response)
   }
+
+  def all(client: ElasticsearchClient): Seq[Product] = {
+    val response = client.search(s => s.index(indexName).query(q => q.matchAll(m => m)).size(1000), classOf[Product])
+    hitsAsProducts(response)
+  }
+
+  def findById(client: ElasticsearchClient, id: Int): Option[Product] = {
+    val response = client.get(g => g.index(indexName).id(id.toString), classOf[Product])
+    if (response.found()) Option(response.source()) else None
+  }
+
+  private def hitsAsProducts(response: SearchResponse[Product]): Seq[Product] =
+    response.hits().hits().asScala.flatMap(hit => Option(hit.source())).toSeq
 }
