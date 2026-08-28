@@ -1,9 +1,12 @@
 # graphql_learning
 
-A small Scala + GraphQL learning project. It exposes a GraphQL API (built with
-[Sangria](https://sangria-graphql.github.io/) and [Apache Pekko HTTP](https://pekko.apache.org/))
-for `Game`, `Author`, and `Review` entities, backed by an in-memory data store
-seeded with sample data.
+A small Scala + GraphQL learning project. It's a multi-module Gradle build:
+
+- **`app`** — a GraphQL API (built with [Sangria](https://sangria-graphql.github.io/)
+  and [Apache Pekko HTTP](https://pekko.apache.org/)) for `Game`, `Author`, and
+  `Review` entities, backed by an in-memory data store seeded with sample data.
+- **`product_search`** — a garment product catalog (men's/women's/unisex) indexed
+  into Elasticsearch for full-text search.
 
 ## Tech stack
 
@@ -12,12 +15,14 @@ seeded with sample data.
 - [Sangria](https://sangria-graphql.github.io/) — GraphQL schema & execution
 - [Apache Pekko HTTP](https://pekko.apache.org/) — HTTP server
 - [Circe](https://circe.github.io/circe/) — JSON marshalling
+- [Elasticsearch](https://www.elastic.co/elasticsearch) (official Java client) — product search, in `product_search`
 - ScalaTest — test framework
 
 ## Prerequisites
 
 - JDK 17 (a Gradle toolchain will otherwise try to provision one automatically)
 - No local Gradle or Scala install needed — the Gradle wrapper (`./gradlew`) downloads everything else
+- Docker (to run Elasticsearch locally via `docker-compose.yml`, needed for `product_search`)
 
 ## Setup
 
@@ -128,6 +133,28 @@ requests covering every query, mutation, and error case:
 ./app/curl-commands.sh         # exercise every endpoint
 ```
 
+## Product search (Elasticsearch)
+
+The `product_search` module indexes garment products (men's/women's/unisex)
+into Elasticsearch and searches them with a `multi_match` query over
+`name`/`description`/`category`/`brand`.
+
+Start a local single-node Elasticsearch cluster:
+
+```bash
+docker compose up -d      # Elasticsearch 9.5.2 on http://localhost:9200, security disabled (dev only)
+```
+
+Then index the sample products and run a search (the first CLI arg is the
+search text, defaulting to `"dress"`):
+
+```bash
+./gradlew :product_search:run --args="jeans"
+```
+
+`ELASTICSEARCH_HOST` / `ELASTICSEARCH_PORT` env vars override the default
+`localhost:9200` target.
+
 ## Project structure
 
 ```
@@ -146,6 +173,14 @@ app/src/main/scala/com/example/
 
 app/src/test/scala/com/example/
 └── graphql/GraphQLRoutesSpec.scala   # route-level tests for every query/mutation
+
+product_search/src/main/scala/com/example/productsearch/
+├── ProductSearchServer.scala         # indexes sample data, runs a demo search
+├── data/SampleData.scala             # seed data for garment products
+├── model/Product.scala
+└── search/
+    ├── ElasticsearchClientFactory.scala   # builds the ElasticsearchClient
+    └── ProductSearchIndex.scala           # index creation, bulk indexing, search
 ```
 
 ## Contributing
