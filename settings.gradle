@@ -13,3 +13,4 @@ plugins {
 
 rootProject.name = 'graphql_learning'
 include('app')
+include('product_search')

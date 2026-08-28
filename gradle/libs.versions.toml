@@ -12,6 +12,8 @@ sangria-circe = "1.3.2"
 circe = "0.14.16"
 pekko = "1.1.5"
 pekko-http = "1.4.0"
+elasticsearch-java = "9.5.2"
+jackson = "2.22.2"
 
 [libraries]
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
@@ -29,3 +31,6 @@ pekko-stream = { module = "org.apache.pekko:pekko-stream_2.13", version.ref = "p
 pekko-http = { module = "org.apache.pekko:pekko-http_2.13", version.ref = "pekko-http" }
 pekko-http-testkit = { module = "org.apache.pekko:pekko-http-testkit_2.13", version.ref = "pekko-http" }
 pekko-testkit = { module = "org.apache.pekko:pekko-testkit_2.13", version.ref = "pekko" }
+elasticsearch-java = { module = "co.elastic.clients:elasticsearch-java", version.ref = "elasticsearch-java" }
+jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
+jackson-module-scala = { module = "com.fasterxml.jackson.module:jackson-module-scala_2.13", version.ref = "jackson" }
