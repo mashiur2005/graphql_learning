@@ -120,12 +120,12 @@ curl -s -X POST http://localhost:8080/graphql \
 The equivalent mutations exist for authors (`createAuthor`, `updateAuthor`,
 `deleteAuthor`) and reviews (`createReview`, `updateReview`, `deleteReview`).
 
-See [`curl-commands.sh`](curl-commands.sh) for a full runnable set of example
+See [`app/curl-commands.sh`](app/curl-commands.sh) for a full runnable set of example
 requests covering every query, mutation, and error case:
 
 ```bash
-./gradlew run &          # start the server in the background
-./curl-commands.sh        # exercise every endpoint
+./gradlew run &                # start the server in the background
+./app/curl-commands.sh         # exercise every endpoint
 ```
 
 ## Project structure

@@ -13,7 +13,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ./gradlew compileScala                                                 # fast compile-only check
 ./gradlew scalafmtCheck                                                # fail if any Scala source is unformatted
 ./gradlew scalafmtApply                                                # reformat all Scala sources with scalafmt
-./curl-commands.sh                                                     # exercise every query/mutation/error case against a running server
+./app/curl-commands.sh                                                 # exercise every query/mutation/error case against a running server
 ```
 
 Test reports land in `app/build/reports/tests/test/index.html`; JUnit-format XML in `app/build/test-results/test/`.
