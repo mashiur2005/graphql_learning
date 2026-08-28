@@ -11,10 +11,12 @@ import java.net.URI
 
 object ElasticsearchClientFactory {
 
-  private val host: String = sys.env.getOrElse("ELASTICSEARCH_HOST", "localhost")
-  private val port: Int = sys.env.get("ELASTICSEARCH_PORT").map(_.toInt).getOrElse(9200)
+  private val defaultHost: String = sys.env.getOrElse("ELASTICSEARCH_HOST", "localhost")
+  private val defaultPort: Int = sys.env.get("ELASTICSEARCH_PORT").map(_.toInt).getOrElse(9200)
 
-  def create(): ElasticsearchClient = {
+  def create(): ElasticsearchClient = create(defaultHost, defaultPort)
+
+  def create(host: String, port: Int): ElasticsearchClient = {
     val objectMapper = new ObjectMapper()
     objectMapper.registerModule(DefaultScalaModule)
 

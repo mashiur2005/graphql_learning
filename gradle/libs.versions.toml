@@ -14,6 +14,7 @@ pekko = "1.1.5"
 pekko-http = "1.4.0"
 elasticsearch-java = "9.5.2"
 jackson = "2.22.2"
+testcontainers = "1.21.4"
 
 [libraries]
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
@@ -34,3 +35,4 @@ pekko-testkit = { module = "org.apache.pekko:pekko-testkit_2.13", version.ref = 
 elasticsearch-java = { module = "co.elastic.clients:elasticsearch-java", version.ref = "elasticsearch-java" }
 jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
 jackson-module-scala = { module = "com.fasterxml.jackson.module:jackson-module-scala_2.13", version.ref = "jackson" }
+testcontainers-core = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }

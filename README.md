@@ -16,6 +16,7 @@ A small Scala + GraphQL learning project. It's a multi-module Gradle build:
 - [Apache Pekko HTTP](https://pekko.apache.org/) — HTTP server
 - [Circe](https://circe.github.io/circe/) — JSON marshalling
 - [Elasticsearch](https://www.elastic.co/elasticsearch) (official Java client) — product search, in `product_search`
+- [Testcontainers](https://testcontainers.com/) — spins up a real Elasticsearch instance for `product_search`'s end-to-end tests
 - ScalaTest — test framework
 
 ## Prerequisites
@@ -59,7 +60,14 @@ Stop it with `Ctrl+C`.
 ./gradlew test
 ```
 
-Test reports are written to `app/build/reports/tests/test/index.html`.
+Test reports are written to `app/build/reports/tests/test/index.html` and
+`product_search/build/reports/tests/test/index.html`.
+
+`product_search`'s tests are end-to-end: they start a real Elasticsearch
+container via [Testcontainers](https://testcontainers.com/) (Docker must be
+running), index the sample products into it, and exercise the GraphQL routes
+against it. Expect them to take longer than `app`'s in-memory tests and to
+fail if Docker isn't available.
 
 ## Using the API
 
@@ -198,6 +206,9 @@ product_search/src/main/scala/com/example/productsearch/
 └── search/
     ├── ElasticsearchClientFactory.scala   # builds the ElasticsearchClient
     └── ProductSearchIndex.scala           # index creation, bulk indexing, search queries
+
+product_search/src/test/scala/com/example/productsearch/
+└── graphql/ProductSearchRoutesSpec.scala   # end-to-end route tests against a Testcontainers ES instance
 ```
 
 ## Contributing

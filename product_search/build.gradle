@@ -51,6 +51,9 @@ testing {
                 implementation libs.pekko.http.testkit
                 implementation libs.pekko.testkit
 
+                // End-to-end tests run against a real, ephemeral Elasticsearch container
+                implementation libs.testcontainers.core
+
                 // Need scala-xml at test runtime
                 runtimeOnly libs.scala.xml.v2.v13
             }
