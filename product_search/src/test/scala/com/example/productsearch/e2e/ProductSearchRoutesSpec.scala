@@ -1,4 +1,4 @@
-package com.example.productsearch.graphql
+package com.example.productsearch.e2e
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient
 import org.apache.pekko.http.scaladsl.model.{ContentTypes, HttpEntity, HttpMethods, HttpRequest, StatusCodes}
@@ -15,6 +15,7 @@ import io.circe.Json
 import io.circe.parser
 
 import com.example.productsearch.data.SampleData
+import com.example.productsearch.graphql.{ProductSearchContext, ProductSearchRoutes}
 import com.example.productsearch.search.{ElasticsearchClientFactory, ProductSearchIndex}
 
 import java.time.Duration
