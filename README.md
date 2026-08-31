@@ -23,7 +23,7 @@ A small Scala + GraphQL learning project. It's a multi-module Gradle build:
 
 - JDK 17 (a Gradle toolchain will otherwise try to provision one automatically)
 - No local Gradle or Scala install needed — the Gradle wrapper (`./gradlew`) downloads everything else
-- Docker (to run Elasticsearch locally via `docker-compose.yml`, needed for `product_search`)
+- Docker (to run Elasticsearch locally via `product_search/docker-compose.yml`, needed for `product_search`)
 
 ## Setup
 
@@ -150,7 +150,7 @@ in-memory store.
 Start a local single-node Elasticsearch cluster:
 
 ```bash
-docker compose up -d      # Elasticsearch 9.5.2 on http://localhost:9200, security disabled (dev only)
+docker compose -f product_search/docker-compose.yml up -d      # Elasticsearch 9.5.2 on http://localhost:9200, security disabled (dev only)
 ```
 
 Then run the server — on startup it creates the `products` index (if

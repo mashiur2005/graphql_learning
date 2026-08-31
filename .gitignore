@@ -10,3 +10,4 @@ build
 # IDE metadata
 .idea
 *.iml
+.DS_Store
