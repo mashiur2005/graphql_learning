@@ -208,18 +208,25 @@ product_search/src/main/scala/com/example/productsearch/
     └── ProductSearchIndex.scala           # index creation, bulk indexing, search queries
 
 product_search/src/test/scala/com/example/productsearch/
-└── graphql/ProductSearchRoutesSpec.scala   # end-to-end route tests against a Testcontainers ES instance
+└── e2e/ProductSearchRoutesSpec.scala   # end-to-end route tests against a Testcontainers ES instance
 ```
 
 ## Contributing
 
-See [`CLAUDE.md`](CLAUDE.md) for build/test commands and the architecture
-notes a future change should respect.
+See [`CLAUDE.md`](CLAUDE.md) for repo-wide build/test commands and
+conventions shared across modules, and each module's own CLAUDE.md
+([`app/CLAUDE.md`](app/CLAUDE.md), [`product_search/CLAUDE.md`](product_search/CLAUDE.md))
+for that module's architecture notes and module-scoped commands.
 
-`git push` in this repo is gated by a `.claude/hooks` check that blocks the
-push if source files changed since README.md was last updated and README.md
-isn't part of the current push. If you hit that, update this README (or ask
-Claude to run the `update-readme` skill) and push again.
+`git push` in this repo is gated by `.claude/hooks` checks that block the
+push if:
+
+- source files changed since README.md was last updated and README.md isn't
+  part of the current push (update this README, or ask Claude to run the
+  `update-readme` skill, then push again), or
+- a module's source changed since that module's CLAUDE.md was last updated
+  and it isn't part of the current push (ask Claude to run the
+  `update-module-claude-md` skill, then push again).
 
 ### Code formatting
 
