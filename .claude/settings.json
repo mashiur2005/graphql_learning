@@ -8,6 +8,11 @@
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/check-readme-before-push.sh",
             "statusMessage": "Checking README.md is up to date before push..."
+          },
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/check-module-claude-md-before-push.sh",
+            "statusMessage": "Checking module CLAUDE.md files are up to date before push..."
           }
         ]
       }
